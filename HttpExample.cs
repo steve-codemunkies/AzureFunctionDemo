@@ -7,6 +7,7 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using System.Text;
 
 namespace My.Functions
 {
@@ -34,7 +35,14 @@ namespace My.Functions
                         ? $"{greeting}, person. This HTTP triggered function executed successfully."
                         : $"{greeting}, {name}. This HTTP triggered function executed successfully.";
 
-            return new OkObjectResult(opening);
+            var stringBuilder = new StringBuilder(opening).Append(Environment.NewLine).Append(Environment.NewLine);
+
+            foreach(var kvp in req.Headers)
+            {
+                stringBuilder = stringBuilder.Append(kvp.Key).Append(": ").Append(kvp.Value).Append(Environment.NewLine);
+            }
+
+            return new OkObjectResult(stringBuilder.ToString());
         }
     }
 }
