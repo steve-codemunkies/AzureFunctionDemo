@@ -50,16 +50,23 @@ jobs:
     env:
       FUNC_APP_NAME: sh20200404-deploy
     steps:
+      - name: "Login via Azure CLI"
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: "Update app settings"
+        uses: azure/appservice-settings@v1
+        with:
+          app-name: 'sh20200404-deploy'
+          app-settings-json: '${{ secrets.APP_SETTINGS }}' 
+        id: settings
+
       - name: Download website
         uses: actions/download-artifact@v1
         with:
           name: functions
           path: ${{ env.OUTPUT_PATH }}
-
-      # - name: "Login via Azure CLI"
-      #   uses: azure/login@v1
-      #   with:
-      #     creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: "Run Azure Functions Action"
         uses: Azure/functions-action@v1

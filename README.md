@@ -9,3 +9,5 @@
 * [Using Publish Profile as Deployment Credential](https://github.com/Azure/functions-action#using-publish-profile-as-deployment-credential-recommended)
 * [bacongobbler / azure-blob-storage-upload](https://github.com/bacongobbler/azure-blob-storage-upload)
 * [Serve file in Blob Storage](https://www.vainolo.com/2018/03/17/azure-functions-part-2-serving-html-pages-with-azure-functions/)
+* [Azure / login](https://github.com/Azure/login)
+* [Azure / appservice-settings](https://github.com/Azure/appservice-settings)
