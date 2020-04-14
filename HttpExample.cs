@@ -56,9 +56,11 @@ namespace My.Functions
             stringBuilder = stringBuilder.Append(Environment.NewLine);
             ClaimsPrincipal claimsPrincipal = req.HttpContext.User;
 
+            stringBuilder = stringBuilder.Append("Claims principal identity is authenticated: ").Append(claimsPrincipal.Identity.IsAuthenticated.ToString()).Append(Environment.NewLine);
+
             foreach(var claim in claimsPrincipal.Claims)
             {
-                stringBuilder = stringBuilder.Append("Claim: ").Append(claim.Type).Append("; Value: ").Append(claim.Value);
+                stringBuilder = stringBuilder.Append("Claim: ").Append(claim.Type).Append("; Value: ").Append(claim.Value).Append(Environment.NewLine);
             }
 
             return new OkObjectResult(stringBuilder.ToString());
