@@ -11,3 +11,4 @@
 * [Serve file in Blob Storage](https://www.vainolo.com/2018/03/17/azure-functions-part-2-serving-html-pages-with-azure-functions/)
 * [Azure / login](https://github.com/Azure/login)
 * [Azure / appservice-settings](https://github.com/Azure/appservice-settings)
+* [Azure Storage Blobs client library for .NET](https://docs.microsoft.com/en-us/dotnet/api/overview/azure/storage.blobs-readme?view=azure-dotnet)

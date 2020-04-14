@@ -8,11 +8,22 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.Text;
+using Azure.Storage.Blobs;
+using System.Security.Claims;
 
 namespace My.Functions
 {
     public static class HttpExample
     {
+        private static string StorageConnectionStringEnvVar = "AzureWebJobsStorage";
+        private static string StorageContainerName = "www";
+        private static string AuthorisedUserEnvVar = "SecretUser";
+        private static string BlobUrlEnvVar = "BlobUrl";
+        private static string ServicePrincipalUserNameHeader = "X-MS-CLIENT-PRINCIPAL-NAME";
+        private static string Unauthorised = "/unauthed.html";
+        private static string AuthorisedNonSecret = "/authed-nonsecret.html";
+        private static string AuthorisedSecret = "/authed-secret.html";
+
         [FunctionName("HttpExample")]
         public static async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
@@ -42,7 +53,48 @@ namespace My.Functions
                 stringBuilder = stringBuilder.Append(kvp.Key).Append(": ").Append(kvp.Value).Append(Environment.NewLine);
             }
 
+            stringBuilder = stringBuilder.Append(Environment.NewLine);
+            ClaimsPrincipal claimsPrincipal = req.HttpContext.User;
+
+            foreach(var claim in claimsPrincipal.Claims)
+            {
+                stringBuilder = stringBuilder.Append("Claim: ").Append(claim.Type).Append("; Value: ").Append(claim.Value);
+            }
+
             return new OkObjectResult(stringBuilder.ToString());
         }
+
+        [FunctionName("FetchHtml")]
+        public static async Task<IActionResult> FetchHtml([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest request, ILogger log)
+        {
+            ClaimsPrincipal claimsPrincipal = request.HttpContext.User;
+            var secretUser = GetEnvironmentVariable(AuthorisedUserEnvVar);
+
+            var requestUrl = "";
+
+            /*if(claimsPrincipal.)
+            {
+                requestUrl = $"{GetEnvironmentVariable(BlobUrlEnvVar)}{Unauthorised}";
+            }
+            else if(string.Compare(secretUser, user, StringComparison.OrdinalIgnoreCase) == 0)
+            {
+                requestUrl = $"{GetEnvironmentVariable(BlobUrlEnvVar)}{AuthorisedSecret}";
+            }
+            else
+            {*/
+                requestUrl = $"{GetEnvironmentVariable(BlobUrlEnvVar)}{AuthorisedNonSecret}";
+            //}
+
+            var output = "";
+            using (var memoryStream = new MemoryStream())
+            {
+                await new BlobClient(new Uri(requestUrl)).DownloadToAsync(memoryStream);
+                output = System.Text.Encoding.UTF8.GetString(memoryStream.ToArray());
+            }
+            
+            return new ContentResult{Content = output, ContentType = "text/html", StatusCode = 200};
+        }
+
+        private static string GetEnvironmentVariable(string name) => System.Environment.GetEnvironmentVariable(name, EnvironmentVariableTarget.Process);
     }
 }
