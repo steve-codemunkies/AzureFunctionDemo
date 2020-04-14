@@ -86,6 +86,8 @@ namespace My.Functions
                 requestUrl = $"{GetEnvironmentVariable(BlobUrlEnvVar)}{AuthorisedNonSecret}";
             }
 
+            log.LogInformation("Requesting blob {requestUrl}", requestUrl);
+
             var output = "";
             using (var memoryStream = new MemoryStream())
             {
