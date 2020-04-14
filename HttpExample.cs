@@ -27,6 +27,7 @@ namespace My.Functions
         [FunctionName("HttpExample")]
         public static async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
+            ClaimsPrincipal claimsPrincipal,
             ILogger log)
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
@@ -54,8 +55,7 @@ namespace My.Functions
             }
 
             stringBuilder = stringBuilder.Append(Environment.NewLine);
-            ClaimsPrincipal claimsPrincipal = req.HttpContext.User;
-
+            stringBuilder = stringBuilder.Append("Claims principal identity name: ").Append(claimsPrincipal.Identity.Name ?? "Unknown name").Append(Environment.NewLine);
             stringBuilder = stringBuilder.Append("Claims principal identity is authenticated: ").Append(claimsPrincipal.Identity.IsAuthenticated.ToString()).Append(Environment.NewLine);
 
             foreach(var claim in claimsPrincipal.Claims)
@@ -67,25 +67,24 @@ namespace My.Functions
         }
 
         [FunctionName("FetchHtml")]
-        public static async Task<IActionResult> FetchHtml([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest request, ILogger log)
+        public static async Task<IActionResult> FetchHtml([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest request, ClaimsPrincipal claimsPrincipal, ILogger log)
         {
-            ClaimsPrincipal claimsPrincipal = request.HttpContext.User;
             var secretUser = GetEnvironmentVariable(AuthorisedUserEnvVar);
 
             var requestUrl = "";
 
-            /*if(claimsPrincipal.)
+            if(!claimsPrincipal.Identity.IsAuthenticated)
             {
                 requestUrl = $"{GetEnvironmentVariable(BlobUrlEnvVar)}{Unauthorised}";
             }
-            else if(string.Compare(secretUser, user, StringComparison.OrdinalIgnoreCase) == 0)
+            else if(string.Compare(secretUser, claimsPrincipal.Identity.Name, StringComparison.OrdinalIgnoreCase) == 0)
             {
                 requestUrl = $"{GetEnvironmentVariable(BlobUrlEnvVar)}{AuthorisedSecret}";
             }
             else
-            {*/
+            {
                 requestUrl = $"{GetEnvironmentVariable(BlobUrlEnvVar)}{AuthorisedNonSecret}";
-            //}
+            }
 
             var output = "";
             using (var memoryStream = new MemoryStream())
