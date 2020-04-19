@@ -89,17 +89,12 @@ namespace My.Functions
             log.LogInformation("Requesting blob {blobName}", blobName);
 
             var connectionString = GetEnvironmentVariable(StorageConnectionStringEnvVar);
-            var container = new BlobContainerClient(connectionString, StorageContainerName);
+            var client = new BlobServiceClient(connectionString);
+            var container = client.GetBlobContainerClient(StorageContainerName);
             var blob = container.GetBlobClient(blobName);
-
-            var output = "";
-            using (var memoryStream = new MemoryStream())
-            {
-                await blob.DownloadToAsync(memoryStream);
-                output = System.Text.Encoding.UTF8.GetString(memoryStream.ToArray());
-            }
+            var result = await blob.DownloadAsync();
             
-            return new ContentResult{Content = output, ContentType = "text/html", StatusCode = 200};
+            return new FileStreamResult(result.Value.Content, result.Value.ContentType);
         }
 
         private static string GetEnvironmentVariable(string name) => System.Environment.GetEnvironmentVariable(name, EnvironmentVariableTarget.Process);
