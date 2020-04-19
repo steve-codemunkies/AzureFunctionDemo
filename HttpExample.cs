@@ -15,7 +15,7 @@ namespace My.Functions
 {
     public static class HttpExample
     {
-        private static string StorageConnectionStringEnvVar = "AzureWebJobsStorage";
+        private static string StorageConnectionStringEnvVar = "BlobConnectionString";
         private static string StorageContainerName = "www";
         private static string AuthorisedUserEnvVar = "SecretUser";
         private static string BlobUrlEnvVar = "BlobUrl";
