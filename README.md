@@ -12,3 +12,4 @@
 * [Azure / login](https://github.com/Azure/login)
 * [Azure / appservice-settings](https://github.com/Azure/appservice-settings)
 * [Azure Storage Blobs client library for .NET](https://docs.microsoft.com/en-us/dotnet/api/overview/azure/storage.blobs-readme?view=azure-dotnet)
+* [Adventures with Azure Storage: Read/Write Files to Blob Storage from Azure Functions](http://www.mattruma.com/adventures-with-azure-storage-read-write-files-to-blob-storage-from-azure-functions/)
