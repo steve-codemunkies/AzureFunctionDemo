@@ -20,9 +20,9 @@ namespace My.Functions
         private static string AuthorisedUserEnvVar = "SecretUser";
         private static string BlobUrlEnvVar = "BlobUrl";
         private static string ServicePrincipalUserNameHeader = "X-MS-CLIENT-PRINCIPAL-NAME";
-        private static string Unauthorised = "/unauthed.html";
-        private static string AuthorisedNonSecret = "/authed-nonsecret.html";
-        private static string AuthorisedSecret = "/authed-secret.html";
+        private static string Unauthorised = "unauthed.html";
+        private static string AuthorisedNonSecret = "authed-nonsecret.html";
+        private static string AuthorisedSecret = "authed-secret.html";
 
         [FunctionName("HttpExample")]
         public static async Task<IActionResult> Run(
