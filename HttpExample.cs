@@ -71,27 +71,31 @@ namespace My.Functions
         {
             var secretUser = GetEnvironmentVariable(AuthorisedUserEnvVar);
 
-            var requestUrl = "";
+            var blobName = "";
 
             if(!claimsPrincipal.Identity.IsAuthenticated)
             {
-                requestUrl = $"{GetEnvironmentVariable(BlobUrlEnvVar)}{Unauthorised}";
+                blobName = Unauthorised;
             }
             else if(string.Compare(secretUser, claimsPrincipal.Identity.Name, StringComparison.OrdinalIgnoreCase) == 0)
             {
-                requestUrl = $"{GetEnvironmentVariable(BlobUrlEnvVar)}{AuthorisedSecret}";
+                blobName = AuthorisedSecret;
             }
             else
             {
-                requestUrl = $"{GetEnvironmentVariable(BlobUrlEnvVar)}{AuthorisedNonSecret}";
+                blobName = AuthorisedNonSecret;
             }
 
-            log.LogInformation("Requesting blob {requestUrl}", requestUrl);
+            log.LogInformation("Requesting blob {blobName}", blobName);
+
+            var connectionString = GetEnvironmentVariable(StorageConnectionStringEnvVar);
+            var container = new BlobContainerClient(connectionString, StorageContainerName);
+            var blob = container.GetBlobClient(blobName);
 
             var output = "";
             using (var memoryStream = new MemoryStream())
             {
-                await new BlobClient(new Uri(requestUrl)).DownloadToAsync(memoryStream);
+                await blob.DownloadToAsync(memoryStream);
                 output = System.Text.Encoding.UTF8.GetString(memoryStream.ToArray());
             }
             
