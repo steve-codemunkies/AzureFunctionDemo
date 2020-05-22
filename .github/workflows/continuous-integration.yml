@@ -4,6 +4,8 @@ env:
   DOTNET_VERSION: "3.1.100"
 
 on:
+  repository_dispatch:
+    type: manual-build
   push:
     branches:
       - master
