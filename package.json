@@ -1,0 +1,12 @@
+{
+    "private": true,
+    "name": "@steve-codemunkies/azure-demo-function",
+    "author": {
+      "name": "Steven Hocking",
+      "email": "steve@codemunki.es"
+    },
+    "devDependencies": {
+      "azure-functions-core-tools": "3.0.*"
+    }
+  }
+  
