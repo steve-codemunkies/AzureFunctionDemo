@@ -203,7 +203,8 @@ namespace AzureFunctionStaticFiles
             if(!claimsPrincipal.Identity.IsAuthenticated ||
                 string.Compare(SecurityOptions.SecretUser, claimsPrincipal.Identity.Name, StringComparison.OrdinalIgnoreCase) != 0)
             {
-                return await ServeBlob($"{req.Scheme}://{host}{req.Path.Value}", log, container, SecurityOptions.UnauthorisedFile, StorageOptions.IndexName);                
+                return new UnauthorizedResult();
+                // return await ServeBlob($"{req.Scheme}://{host}{req.Path.Value}", log, container, SecurityOptions.UnauthorisedFile, StorageOptions.IndexName);                
             }
 
             path = NormalisePath(path, req.Path.Value);
